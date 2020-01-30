@@ -2,4 +2,6 @@ secrets
 webpack-stats.json
 .vscode
 node_modules
+static
+*.sqlite3
 
