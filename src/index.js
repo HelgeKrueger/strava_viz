@@ -1,18 +1,10 @@
 const d3 = require("d3");
+const calendar = require("./calendar.js");
 
 const canvas = d3.select("#canvas");
 
-function determineColor(d) {
-  if (d["activity_type"] == "ride") {
-    return "blue";
-  }
-
-  if (d["activity_type"] == "run") {
-    return "red";
-  }
-
-  return "black";
-}
+const cellSize = 15;
+const yearHeight = cellSize * 7 + 25;
 
 function transformData(data) {
   return data.map(d => {
@@ -24,21 +16,22 @@ function transformData(data) {
 }
 
 d3.json("/strava-activity").then(data => {
-  let circles = canvas.selectAll("circle").data(data);
-
   data = transformData(data);
+  const years = d3
+    .nest()
+    .key(d => d["datetime"].getUTCFullYear())
+    .entries(data);
 
-  const time_sorted = data.map(d => d["time_seconds"]).sort();
-  const time_minimum = time_sorted[0];
-  const time_maximum = time_sorted[time_sorted.length - 1];
-  const time_length = time_maximum - time_minimum;
+  const year = canvas
+    .selectAll("g")
+    .data(years)
+    .join("g")
+    .attr(
+      "transform",
+      (d, i) => `translate(40, ${yearHeight * i + cellSize * 1.5})`
+    );
 
-  circles
-    .enter()
-    .append("circle")
-    .attr("cx", d => ((d["time_seconds"] - time_minimum) / time_length) * 1000)
-    .attr("cy", 100)
-    .attr("r", d => d["distance_meter"] / 1000)
-    .attr("fill", determineColor)
-    .attr("fill-opacity", 0.2);
+  calendar.appendCaption(year);
+  calendar.showDayNames(year);
+  calendar.displayDays(year);
 });
