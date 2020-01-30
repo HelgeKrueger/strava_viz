@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+tmux new-session 'npx webpack --watch' \; new-window 'pipenv run django-server' \; new-window 'pipenv shell'

@@ -18,3 +18,6 @@ django-webpack-loader = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+django-server = "python strava_viz/manage.py runserver"
