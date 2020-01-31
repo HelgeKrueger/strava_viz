@@ -1,8 +1,16 @@
-export function transformData(data) {
-  return data.map(d => {
+export function transformData(data, options = {}) {
+  let transformed = data.map(d => {
     d["datetime"] = new Date(d["datetime"]);
     d["time_seconds"] = d["datetime"].getTime();
     d["distance_km"] = d["distance_meter"] / 1000;
     return d;
   });
+
+  if (options.filter) {
+    transformed = transformed.filter(
+      d => d["activity_type"] === options.filter
+    );
+  }
+
+  return transformed;
 }

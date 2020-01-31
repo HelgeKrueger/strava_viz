@@ -32,7 +32,7 @@ function showDayNames(year) {
     .text(formatDay);
 }
 
-function determineColor(d) {
+export function determineColor(d) {
   if (d["activity_type"] == "ride") {
     return "blue";
   }
