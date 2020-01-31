@@ -4,17 +4,9 @@
 
 <script>
 import { buildCalendar } from "../calendar.js";
+import { transformData } from "../data/transform.js";
 
 const d3 = require("d3");
-
-function transformData(data) {
-  return data.map(d => {
-    d["datetime"] = new Date(d["datetime"]);
-    d["time_seconds"] = d["datetime"].getTime();
-
-    return d;
-  });
-}
 
 export default {
   name: "Calendar",
