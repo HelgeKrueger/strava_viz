@@ -4,4 +4,4 @@ webpack-stats.json
 node_modules
 static
 *.sqlite3
-
+*.pyc

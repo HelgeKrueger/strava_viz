@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 flake8 = "*"
+autopep8 = "*"
 
 [packages]
 pyyaml = "*"
@@ -15,6 +16,7 @@ django = "*"
 djangorestframework = "*"
 django-enum-choices = "*"
 django-webpack-loader = "*"
+python-dateutil = "*"
 
 [requires]
 python_version = "3.7"

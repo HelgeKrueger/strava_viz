@@ -10,7 +10,7 @@
 import Calendar from "./Calendar.vue";
 
 export default {
-  name: "app",
+  name: "App",
   components: {
     Calendar
   }
