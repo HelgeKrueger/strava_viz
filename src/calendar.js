@@ -10,7 +10,7 @@ function appendCaption(year) {
   year
     .append("text")
     .attr("x", -5)
-    .attr("y", -30)
+    .attr("y", -20)
     .attr("text-anchor", "end")
     .attr("font-size", 16)
     .attr("font-weight", 550)
@@ -25,7 +25,7 @@ function showDayNames(year) {
     .selectAll("text")
     .data(d3.range(7).map(i => new Date(1999, 0, i)))
     .join("text")
-    .attr("x", -5)
+    .attr("x", 5)
     .attr("y", d => (countDay(d) + 0.5) * cellSize)
     .attr("dy", "0.31em")
     .text(formatDay);
@@ -43,6 +43,14 @@ function determineColor(d) {
   return "black";
 }
 
+function fixDay(day) {
+  day = day - 1;
+  if (day < 0) {
+    return 6;
+  }
+  return day
+}
+
 function displayDays(year) {
   year
     .append("g")
@@ -56,7 +64,7 @@ function displayDays(year) {
       (d, i) =>
         timeWeek.count(d3.utcYear(d.datetime), d.datetime) * cellSize + 10
     )
-    .attr("y", d => countDay(d.datetime) * cellSize + 0.5)
+    .attr("y", d => fixDay(countDay(d.datetime)) * cellSize + 0.5)
     .attr("fill", determineColor);
 }
 

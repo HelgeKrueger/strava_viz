@@ -17,10 +17,17 @@ function transformData(data) {
 
 d3.json("/strava-activity").then(data => {
   data = transformData(data);
+  console.log(data);
   const years = d3
     .nest()
     .key(d => d["datetime"].getUTCFullYear())
+    .sortKeys(d3.descending)
+    // TODO Adapt to monthly list
+    // .key(d => d["datetime"].getMonth())
+    // .sortKeys(d3.ascending)
     .entries(data);
+
+  console.log(years);
 
   const year = canvas
     .selectAll("g")
