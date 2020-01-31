@@ -4,6 +4,7 @@
     <router-link to="/">Welcome</router-link>
     <router-link to="/calendar">Calendar</router-link>
     <router-link to="/aggregated">Aggregated</router-link>
+    <router-link to="/monthly">Monthly</router-link>
     <router-view></router-view>
   </div>
 </template>
@@ -15,10 +16,9 @@ import Router from "vue-router";
 import Calendar from "./Calendar.vue";
 import Welcome from "./Welcome.vue";
 import Aggregated from "./Aggregated.vue";
+import Monthly from "./Monthly.vue";
 
 Vue.use(Router);
-
-console.log(Aggregated.name);
 
 function buildRoutes(components) {
   return components.map(component => {
@@ -38,7 +38,7 @@ const router = new Router({
       name: "Welcome",
       component: Welcome
     }
-  ].concat(buildRoutes([Calendar, Aggregated]))
+  ].concat(buildRoutes([Calendar, Aggregated, Monthly]))
 });
 
 export default {
@@ -47,7 +47,8 @@ export default {
   components: {
     Calendar,
     Welcome,
-    Aggregated
+    Aggregated,
+    Monthly
   }
 };
 </script>
