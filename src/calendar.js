@@ -5,6 +5,7 @@ const formatDay = d =>
 const cellSize = 15;
 const countDay = d => d.getUTCDay();
 const timeWeek = d3.utcSunday;
+const yearHeight = cellSize * 7 + 25;
 
 function appendCaption(year) {
   year
@@ -48,7 +49,7 @@ function fixDay(day) {
   if (day < 0) {
     return 6;
   }
-  return day
+  return day;
 }
 
 function displayDays(year) {
@@ -68,8 +69,28 @@ function displayDays(year) {
     .attr("fill", determineColor);
 }
 
-module.exports = {
-  appendCaption,
-  showDayNames,
-  displayDays
-};
+export function buildCalendar(canvas, data) {
+  const years = d3
+    .nest()
+    .key(d => d["datetime"].getUTCFullYear())
+    .sortKeys(d3.descending)
+    // TODO Adapt to monthly list
+    // .key(d => d["datetime"].getMonth())
+    // .sortKeys(d3.ascending)
+    .entries(data);
+
+  console.log(years);
+
+  const year = canvas
+    .selectAll("g")
+    .data(years)
+    .join("g")
+    .attr(
+      "transform",
+      (d, i) => `translate(40, ${yearHeight * i + cellSize * 1.5})`
+    );
+
+  appendCaption(year);
+  showDayNames(year);
+  displayDays(year);
+}
