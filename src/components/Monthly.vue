@@ -7,6 +7,7 @@
 
 <script>
 import { transformData } from "../data/transform.js";
+import { Aggregator } from "../data/aggregator.js";
 
 const d3 = require("d3");
 
@@ -35,16 +36,7 @@ export default {
     d3.json("/strava-activity").then(data => {
       data = transformData(data);
 
-      let yearMonths = d3
-        .nest()
-        .key(yearMonth)
-        .sortKeys(d3.descending)
-        .entries(data);
-
-      yearMonths = yearMonths.map(entry => {
-        entry.values = transformMonthData(entry.values);
-        return entry;
-      });
+      const aggregator = new Aggregator(data);
 
       const canvas = d3.select("svg.canvas");
 
@@ -73,18 +65,26 @@ export default {
         .x(d => xScale(d[0]))
         .y(d => yScale(d[1]));
 
-      canvas
-        .append("g")
-        .append("path")
-        .datum(yearMonths[0].values)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("stroke-linejoin", "round")
-        .attr("stroke-linecap", "round")
-        .attr("d", line);
+      const plotLine = (data, opacity) => {
+        canvas
+          .append("g")
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 1.5)
+          .attr("stroke-linejoin", "round")
+          .attr("stroke-linecap", "round")
+          .attr("stroke-opacity", opacity)
+          .attr("d", line);
+      };
 
-      console.log(yearMonths[0]);
+      plotLine(aggregator.currentMonth, 1);
+      plotLine(aggregator.lastMonth, 0.7);
+
+      aggregator.lastYear.forEach(d => {
+        plotLine(d, 0.3);
+      });
     });
   }
 };
