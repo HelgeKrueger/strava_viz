@@ -1,10 +1,11 @@
 <template>
   <div>
-    <p>Hello</p>
-    <router-link to="/">Welcome</router-link>
-    <router-link to="/calendar">Calendar</router-link>
-    <router-link to="/aggregated">Aggregated</router-link>
-    <router-link to="/monthly">Monthly</router-link>
+    <div class="navigation-menu">
+      <router-link to="/">Welcome</router-link>
+      <router-link to="/calendar">Calendar</router-link>
+      <router-link to="/aggregated">Aggregated</router-link>
+      <router-link to="/monthly">Monthly</router-link>
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -53,4 +54,17 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+div.navigation-menu {
+  background-color: darkblue;
+  padding: 20px;
+}
+
+a {
+  color: white;
+}
+
+a:visited {
+  color: white;
+}
+</style>
