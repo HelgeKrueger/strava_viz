@@ -72,7 +72,7 @@ export default {
           .datum(data)
           .attr("fill", "none")
           .attr("stroke", "steelblue")
-          .attr("stroke-width", 1.5)
+          .attr("stroke-width", 3)
           .attr("stroke-linejoin", "round")
           .attr("stroke-linecap", "round")
           .attr("stroke-opacity", opacity)
@@ -80,10 +80,10 @@ export default {
       };
 
       plotLine(aggregator.currentMonth, 1);
-      plotLine(aggregator.lastMonth, 0.7);
+      plotLine(aggregator.lastMonth, 0.6);
 
       aggregator.lastYear.forEach(d => {
-        plotLine(d, 0.3);
+        plotLine(d, 0.2);
       });
     });
   }
