@@ -8,7 +8,7 @@ module.exports = {
   context: __dirname,
   entry: "./src/index.js",
   output: {
-    path: path.resolve("./strava_viz/strava_viz/app/static/"),
+    path: path.resolve("./strava_viz/app/static/"),
     filename: "[name]-[hash].js"
   },
   module: {

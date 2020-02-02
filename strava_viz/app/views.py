@@ -6,6 +6,7 @@ from strava_viz.app.models import StravaConnectionInformation
 from strava_viz.lib import Strava
 
 import requests
+import os
 
 
 @login_required
@@ -25,7 +26,7 @@ def strava_reply(request):
     code = request.GET['code']
     payload = {
         'client_id':  '4469',
-        'client_secret': 'eb04c03b67cf447e1919fb833410133a8442c76b',
+        'client_secret': os.environ['STRAVA_CLIENT_SECRET'],
         'code': code,
         'grant_type': 'authorization_code'
     }
