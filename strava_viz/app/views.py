@@ -5,9 +5,6 @@ from django.contrib.auth.decorators import login_required
 from strava_viz.app.models import StravaConnectionInformation
 from strava_viz.lib import Strava
 
-import requests
-import os
-
 
 @login_required
 def index(request):
@@ -24,16 +21,10 @@ def connect_to_strava(request):
 
 def strava_reply(request):
     code = request.GET['code']
-    payload = {
-        'client_id':  '4469',
-        'client_secret': os.environ['STRAVA_CLIENT_SECRET'],
-        'code': code,
-        'grant_type': 'authorization_code'
-    }
 
-    response = requests.post('https://www.strava.com/api/v3/oauth/token', data=payload)
+    strava = Strava()
+    parsed_response = strava.initial_authorization(code)
 
-    parsed_response = response.json()
     athlete_id = parsed_response['athlete']['id']
 
     username = f'__strava__{athlete_id}'
