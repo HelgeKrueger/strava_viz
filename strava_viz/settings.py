@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'strava_viz.api.apps.ApiConfig',
     'strava_viz.app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'webpack_loader',
 ]
 
