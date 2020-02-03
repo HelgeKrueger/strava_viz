@@ -4,13 +4,8 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import StravaConnectionInformation, StravaActivity, ActivityType
+from strava_viz.app.models import StravaConnectionInformation, StravaActivity, ActivityType
 from strava_viz.lib import Strava
-
-
-@login_required
-def index(request):
-    return render(request, 'index.html')
 
 
 def connect_to_strava(request):
