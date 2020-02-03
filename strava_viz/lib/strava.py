@@ -8,6 +8,9 @@ class Strava:
         self.client_id = os.environ['STRAVA_CLIENT_ID']
         self.client_secret = os.environ['STRAVA_CLIENT_SECRET']
 
+        self.access_token = None
+        self.refresh_token = None
+
     def build_authorize_url(self, redirect_url):
         strava_base_url = ' https://www.strava.com/oauth/authorize?'
         strava_params = {
@@ -31,3 +34,32 @@ class Strava:
         response = requests.post('https://www.strava.com/api/v3/oauth/token', data=payload)
 
         return response.json()
+
+    def set_tokens(self, access_token, refresh_token):
+        self.access_token = access_token
+        self.refresh_token = refresh_token
+
+    def request_new_access_token(self):
+        payload = {
+            'client_id':  self.client_id,
+            'client_secret': self.client_secret,
+            'grant_type': 'refresh_token',
+            'refresh_token': self.refresh_token
+        }
+
+        response = requests.post('https://www.strava.com/api/v3/oauth/token', data=payload)
+
+        self.access_token = response.json()['access_token']
+
+    def get_athlete(self):
+        response = requests.get("https://www.strava.com/api/v3/athlete", headers=self.get_headers())
+
+        if response.status_code != 200:
+            raise Exception("Need to update token")
+
+        return response.json()
+
+    def get_headers(self):
+        return {
+            'Authorization': f'Bearer {self.access_token}'
+        }

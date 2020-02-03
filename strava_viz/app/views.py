@@ -43,6 +43,21 @@ def strava_reply(request):
     return redirect('/app')
 
 
+@login_required
 def update_data(request):
+    current_user = request.user
+    sci = current_user.stravaconnectioninformation
 
-    return JsonResponse({})
+    strava = Strava()
+    strava.set_tokens(sci.access_token, sci.refresh_token)
+
+    try:
+        result = strava.get_athlete()
+    except Exception:
+        strava.request_new_access_token()
+        current_user.stravaconnectioninformation.refresh_token = strava.refresh_token
+        current_user.stravaconnectioninformation.save()
+
+        result = strava.get_athlete()
+
+    return JsonResponse(result)
