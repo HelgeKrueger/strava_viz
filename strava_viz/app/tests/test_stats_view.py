@@ -41,7 +41,7 @@ class MonthlyDataTests(TestCase):
         self.assertEqual(data['currentMonth'][-1], [date.today().day, 0, 0])
 
     def test_gets_response(self):
-        self.create_activity(moving_time=12)
+        self.create_activity(moving_time=12*3600)
 
         response = self.client.get(reverse('stats_monthly_data'))
 
@@ -56,7 +56,7 @@ class MonthlyDataTests(TestCase):
         start_of_month = now.replace(day=1)
         start_of_last_month = (start_of_month - timedelta(days=20)).replace(day=1)
 
-        self.create_activity(my_datetime=start_of_last_month, moving_time=1, distance_meter=2000)
+        self.create_activity(my_datetime=start_of_last_month, moving_time=3600, distance_meter=2000)
 
         response = self.client.get(reverse('stats_monthly_data'))
 

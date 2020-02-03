@@ -1,5 +1,6 @@
 from datetime import date
 from collections import defaultdict
+import numpy as np
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -11,7 +12,7 @@ def strava_activity_to_dict(strava_activity):
     return {
         'activity_id': strava_activity.activity_id,
         'datetime': strava_activity.datetime,
-        'moving_time': strava_activity.moving_time,
+        'moving_time': strava_activity.moving_time / 3600,
         'distance_km': strava_activity.distance_meter / 1000
     }
 
@@ -68,7 +69,14 @@ def monthly_data(request):
     month_list = build_month_list()
     current_month = activities_by_month[month_list[0]]
 
+    transformed = [transform_month(current_month, end_day=date.today().day)] + [transform_month(activities_by_month[m]) for m in month_list[1:]]
+
+    maximal_distance = float(np.max([m[-1][1] for m in transformed]))
+    maximal_time = float(np.max([m[-1][2] for m in transformed]))
+
     return JsonResponse({
-        'currentMonth': transform_month(current_month, end_day=date.today().day),
-        'lastYear': [transform_month(activities_by_month[m]) for m in month_list[1:]]
+        'currentMonth': transformed[0],
+        'lastYear': transformed[1:],
+        'maximal_distance': maximal_distance,
+        'maximal_time': maximal_time
     })

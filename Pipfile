@@ -18,6 +18,7 @@ djangorestframework = "*"
 django-enum-choices = "*"
 django-webpack-loader = "*"
 python-dateutil = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
