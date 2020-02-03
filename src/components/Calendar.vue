@@ -13,7 +13,7 @@ export default {
   mounted() {
     const canvas = d3.select("svg.canvas");
 
-    d3.json("/strava-activity").then(data => {
+    d3.json("/api/activities").then(data => {
       data = transformData(data);
 
       buildCalendar(canvas, data);
@@ -23,8 +23,4 @@ export default {
 </script>
 
 <style>
-svg {
-  width: 100%;
-  height: 2000px;
-}
 </style>

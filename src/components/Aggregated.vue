@@ -76,7 +76,7 @@ export default {
     };
   },
   mounted() {
-    d3.json("/strava-activity").then(data => {
+    d3.json("/api/activities").then(data => {
       this.data = data;
       renderHistoric(data, this.filter_activity_type);
     });

@@ -114,5 +114,6 @@ export default {
 .canvas {
   width: 100%;
   height: calc(100vh - 200px);
+  overflow-y: scroll;
 }
 </style>

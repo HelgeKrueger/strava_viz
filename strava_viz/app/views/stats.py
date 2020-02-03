@@ -13,7 +13,8 @@ def strava_activity_to_dict(strava_activity):
         'activity_id': strava_activity.activity_id,
         'datetime': strava_activity.datetime,
         'moving_time': strava_activity.moving_time / 3600,
-        'distance_km': strava_activity.distance_meter / 1000
+        'distance_km': strava_activity.distance_meter / 1000,
+        'activity_type': strava_activity.activity_type.value
     }
 
 
@@ -80,3 +81,11 @@ def monthly_data(request):
         'maximal_distance': maximal_distance,
         'maximal_time': maximal_time
     })
+
+
+@login_required
+def activities(request):
+    activities = StravaActivity.objects.filter(user=request.user)
+    activities = map(strava_activity_to_dict, activities)
+
+    return JsonResponse(list(activities), safe=False)
