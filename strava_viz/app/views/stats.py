@@ -69,6 +69,6 @@ def monthly_data(request):
     current_month = activities_by_month[month_list[0]]
 
     return JsonResponse({
-        'current_month': transform_month(current_month, end_day=date.today().day),
-        'last_year': [transform_month(activities_by_month[m]) for m in month_list[1:]]
+        'currentMonth': transform_month(current_month, end_day=date.today().day),
+        'lastYear': [transform_month(activities_by_month[m]) for m in month_list[1:]]
     })

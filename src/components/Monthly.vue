@@ -6,38 +6,12 @@
 </template>
 
 <script>
-import { transformData } from "../data/transform.js";
-import { Aggregator } from "../data/aggregator.js";
-
 const d3 = require("d3");
-
-const padTwoDigits = x => (x < 10 ? `0${x}` : `${x}`);
-
-function yearMonth(d) {
-  const date = d["datetime"];
-  return `${date.getUTCFullYear()}-${padTwoDigits(date.getMonth())}`;
-}
-
-function transformMonthData(entries) {
-  entries = entries.sort(d => d["time_seconds"]);
-  return entries.reduce(
-    (acc, x) => {
-      const last = acc[acc.length - 1];
-      acc.push([x["datetime"].getDate(), last[1] + x["distance_km"]]);
-      return acc;
-    },
-    [[0, 0]]
-  );
-}
 
 export default {
   name: "Monthly",
   mounted() {
-    d3.json("/strava-activity").then(data => {
-      data = transformData(data);
-
-      const aggregator = new Aggregator(data);
-
+    d3.json("/api/monthly_data").then(data => {
       const canvas = d3.select("svg.canvas");
 
       const xScale = d3
@@ -79,10 +53,10 @@ export default {
           .attr("d", line);
       };
 
-      plotLine(aggregator.currentMonth, 1);
-      plotLine(aggregator.lastMonth, 0.6);
+      plotLine(data.currentMonth, 1);
+      plotLine(data.lastYear[0], 0.6);
 
-      aggregator.lastYear.forEach(d => {
+      data.lastYear.slice(1).forEach(d => {
         plotLine(d, 0.2);
       });
     });

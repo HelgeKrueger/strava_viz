@@ -38,7 +38,7 @@ class MonthlyDataTests(TestCase):
 
         data = response.json()
 
-        self.assertEqual(data['current_month'][-1], [date.today().day, 0, 0])
+        self.assertEqual(data['currentMonth'][-1], [date.today().day, 0, 0])
 
     def test_gets_response(self):
         self.create_activity(moving_time=12)
@@ -49,7 +49,7 @@ class MonthlyDataTests(TestCase):
 
         data = response.json()
 
-        self.assertEqual(data['current_month'][-1][2], 12)
+        self.assertEqual(data['currentMonth'][-1][2], 12)
 
     def test_gets_last_month(self):
         now = datetime.now()
@@ -64,7 +64,7 @@ class MonthlyDataTests(TestCase):
 
         data = response.json()
 
-        last_month = data['last_year'][0]
+        last_month = data['lastYear'][0]
         self.assertEqual(len(last_month), 32)
         self.assertEquals(last_month[1], [1, 2, 1])
         self.assertEquals(last_month[-1], [31, 2, 1])
