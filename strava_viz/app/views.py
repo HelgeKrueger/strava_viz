@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 from strava_viz.app.models import StravaConnectionInformation
 from strava_viz.lib import Strava
 
@@ -39,3 +41,8 @@ def strava_reply(request):
     login(request, user)
 
     return redirect('/app')
+
+
+def update_data(request):
+
+    return JsonResponse({})

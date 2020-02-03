@@ -5,6 +5,9 @@
       <router-link to="/calendar">Calendar</router-link>
       <router-link to="/aggregated">Aggregated</router-link>
       <router-link to="/monthly">Monthly</router-link>
+      <span class="float-right">
+        <UpdateData />
+      </span>
     </div>
     <router-view></router-view>
   </div>
@@ -18,6 +21,7 @@ import Calendar from "./Calendar.vue";
 import Welcome from "./Welcome.vue";
 import Aggregated from "./Aggregated.vue";
 import Monthly from "./Monthly.vue";
+import UpdateData from "./UpdateData.vue";
 
 Vue.use(Router);
 
@@ -49,7 +53,11 @@ export default {
     Calendar,
     Welcome,
     Aggregated,
-    Monthly
+    Monthly,
+    UpdateData
+  },
+  methods: {
+    updateData: () => {}
   }
 };
 </script>
@@ -66,5 +74,9 @@ a {
 
 a:visited {
   color: white;
+}
+
+.float-right {
+  float: right;
 }
 </style>
