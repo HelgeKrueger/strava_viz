@@ -18,7 +18,7 @@ class Strava:
             'redirect_uri': redirect_url,
             'response_type': 'code',
             'approval_prompt': 'auto',
-            'scope': 'read'
+            'scope': 'read,activity:read'
         }
 
         return strava_base_url + urlencode(strava_params)
@@ -55,6 +55,19 @@ class Strava:
         response = requests.get("https://www.strava.com/api/v3/athlete", headers=self.get_headers())
 
         if response.status_code != 200:
+            raise Exception("Need to update token")
+
+        return response.json()
+
+    def get_activities(self, page=0):
+        payload = {
+            'page': page + 1
+        }
+
+        response = requests.get("https://www.strava.com/api/v3/athlete/activities", params=payload, headers=self.get_headers())
+
+        if response.status_code != 200:
+            print(response.text)
             raise Exception("Need to update token")
 
         return response.json()

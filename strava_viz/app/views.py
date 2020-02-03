@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from strava_viz.app.models import StravaConnectionInformation
+from .models import StravaConnectionInformation, StravaActivity, ActivityType
 from strava_viz.lib import Strava
 
 
@@ -52,12 +52,33 @@ def update_data(request):
     strava.set_tokens(sci.access_token, sci.refresh_token)
 
     try:
-        result = strava.get_athlete()
+        result = strava.get_activities()
     except Exception:
         strava.request_new_access_token()
         current_user.stravaconnectioninformation.refresh_token = strava.refresh_token
         current_user.stravaconnectioninformation.save()
 
-        result = strava.get_athlete()
+        result = strava.get_activities()
 
-    return JsonResponse(result)
+    for activity in result:
+        insert_strava_activity(current_user, activity)
+
+    return JsonResponse({})
+
+
+def insert_strava_activity(user, activity):
+    activity_type = ActivityType(activity['type'].lower())
+
+    activity = StravaActivity.objects.create(
+        user=user,
+        name=activity['name'],
+        datetime=activity['start_date'],
+        activity_type=activity_type,
+        activity_id=activity['id'],
+        distance_meter=activity['distance'],
+        moving_time=activity['moving_time'],
+        average_heartrate=activity['average_heartrate'],
+        average_speed=activity['average_speed'],
+        polyline=activity['map']['summary_polyline']
+    )
+    activity.save()

@@ -20,8 +20,13 @@ class StravaActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=255)
-    distance_meter = models.FloatField()
-    moving_time = models.FloatField()
-    activity_id = models.BigIntegerField()
     datetime = models.DateTimeField()
     activity_type = EnumChoiceField(ActivityType, default=ActivityType.RUN)
+    activity_id = models.BigIntegerField()
+
+    distance_meter = models.FloatField()
+    moving_time = models.FloatField()
+    average_heartrate = models.FloatField()
+    average_speed = models.FloatField()
+
+    polyline = models.TextField()
