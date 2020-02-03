@@ -60,25 +60,50 @@ def update_data(request):
 
         result = strava.get_activities()
 
-    for activity in result:
-        insert_strava_activity(current_user, activity)
+    insert_count = 0
+    current_page = 0
 
-    return JsonResponse({})
+    while len(result) > 0:
+        for activity in result:
+            if insert_strava_activity(current_user, activity):
+                insert_count += 1
+            else:
+                return JsonResponse({
+                    'insert_count': insert_count
+                })
+
+        current_page += 1
+        result = strava.get_activities(page=current_page)
+
+    return JsonResponse({
+        'insert_count': insert_count
+    })
 
 
 def insert_strava_activity(user, activity):
+    activity_id = activity['id']
+
+    if StravaActivity.objects.filter(activity_id=activity_id):
+        return False
+
     activity_type = ActivityType(activity['type'].lower())
+
+    polyline = activity['map']['summary_polyline']
+    if not polyline:
+        polyline = ""
 
     activity = StravaActivity.objects.create(
         user=user,
         name=activity['name'],
         datetime=activity['start_date'],
         activity_type=activity_type,
-        activity_id=activity['id'],
+        activity_id=activity_id,
         distance_meter=activity['distance'],
         moving_time=activity['moving_time'],
-        average_heartrate=activity['average_heartrate'],
-        average_speed=activity['average_speed'],
-        polyline=activity['map']['summary_polyline']
+        average_heartrate=activity.get('average_heartrate', 0),
+        average_speed=activity.get('average_speed', 0),
+        polyline=polyline
     )
     activity.save()
+
+    return True
