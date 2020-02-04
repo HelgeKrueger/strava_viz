@@ -17,7 +17,7 @@ export default {
     update: function() {
       this.updating = true;
 
-      fetch("/app/update_data")
+      fetch("/update_data")
         .then(data => data.json())
         .then(data => {
           console.log(data);

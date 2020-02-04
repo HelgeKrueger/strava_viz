@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -9,9 +11,14 @@ from strava_viz.lib import Strava
 
 
 def connect_to_strava(request):
+    redirect_uri = 'https://strava-viz.herokuapp.com/strava_reply'
+
+    if os.environ['ENVIRONMENT'] == 'dev':
+        redirect_uri = 'http://localhost:8000/strava_reply'
+
     strava = Strava()
     context = {
-        'strava_link': strava.build_authorize_url('http://localhost:8000/app/strava_reply')
+        'strava_link': strava.build_authorize_url(redirect_uri)
     }
     return render(request, 'strava.html', context=context)
 
@@ -35,7 +42,7 @@ def strava_reply(request):
 
     login(request, user)
 
-    return redirect('/app')
+    return redirect('/')
 
 
 @login_required

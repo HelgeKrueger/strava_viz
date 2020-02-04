@@ -39,7 +39,8 @@
     "wepack-cli": "0.0.1-security"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack"
   },
   "author": "",
   "license": "ISC"

@@ -19,6 +19,9 @@ django-enum-choices = "*"
 django-webpack-loader = "*"
 python-dateutil = "*"
 numpy = "*"
+gunicorn = "*"
+whitenoise = "*"
+django-heroku = "*"
 
 [requires]
 python_version = "3.7"
