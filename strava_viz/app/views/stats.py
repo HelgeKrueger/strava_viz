@@ -94,11 +94,12 @@ def activities(request):
 @login_required
 def polylines(request):
     activities = StravaActivity.objects.filter(user=request.user)
-    polylines = [{
+    today = date.today()
+    this_year = [{
         'polyline': a.polyline,
         'activity_type': a.activity_type.value
-    } for a in activities]
+    } for a in activities if a.datetime.year == today.year]
 
     return JsonResponse({
-        'polylines': polylines
+        'thisYear': this_year
     })
