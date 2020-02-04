@@ -8,5 +8,6 @@ urlpatterns = [
     path('strava_reply', views.strava_reply, name='strava_reply'),
     path('update_data', views.update_data, name="update_data"),
     path('api/monthly_data', views.monthly_data, name='stats_monthly_data'),
-    path('api/activities', views.activities, name='api_activties')
+    path('api/activities', views.activities, name='api_activties'),
+    path('api/polylines', views.polylines, name='api_polylines')
 ]

@@ -5,6 +5,7 @@
       <router-link to="/calendar">Calendar</router-link>
       <router-link to="/aggregated">Aggregated</router-link>
       <router-link to="/monthly">Monthly</router-link>
+      <router-link to="/activitymap">Map</router-link>
       <span class="float-right">
         <UpdateData />
       </span>
@@ -22,6 +23,7 @@ import Welcome from "./Welcome.vue";
 import Aggregated from "./Aggregated.vue";
 import Monthly from "./Monthly.vue";
 import UpdateData from "./UpdateData.vue";
+import ActivityMap from "./ActivityMap.vue";
 
 Vue.use(Router);
 
@@ -43,7 +45,7 @@ const router = new Router({
       name: "Welcome",
       component: Welcome
     }
-  ].concat(buildRoutes([Calendar, Aggregated, Monthly]))
+  ].concat(buildRoutes([Calendar, Aggregated, Monthly, ActivityMap]))
 });
 
 export default {
@@ -54,7 +56,8 @@ export default {
     Welcome,
     Aggregated,
     Monthly,
-    UpdateData
+    UpdateData,
+    Map
   },
   methods: {
     updateData: () => {}
@@ -68,15 +71,15 @@ div.navigation-menu {
   padding: 20px;
 }
 
-a {
+div.navigation-menu a {
   color: white;
 }
 
-a:visited {
+div.navigation-menu a:visited {
   color: white;
 }
 
-.float-right {
+div.navigation-menu .float-right {
   float: right;
 }
 </style>
