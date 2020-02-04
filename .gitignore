@@ -6,3 +6,4 @@ static
 *.sqlite3
 *.pyc
 .env
+staticfiles

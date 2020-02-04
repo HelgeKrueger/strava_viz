@@ -43,25 +43,21 @@ function createMap(d) {
   });
   map.setView(view);
 
-  console.log(fromLonLat([11.7271, 48.10963]));
+  const features = d.polylines.map(x => transformPolyline(x.polyline));
+  console.log(features);
 
-  setTimeout(() => {
-    const features = d.polylines.map(x => transformPolyline(x.polyline));
-    console.log(features);
+  let source = new VectorSource({
+    features: features
+  });
 
-    let source = new VectorSource({
-      features: features
-    });
+  view.fit(source.getExtent());
 
-    view.fit(source.getExtent());
+  var layerLines = new VectorLayer({
+    source: source
+  });
 
-    var layerLines = new VectorLayer({
-      source: source
-    });
-
-    map.addLayer(layerLines);
-    map.render();
-  }, 1000);
+  map.addLayer(layerLines);
+  map.render();
 }
 
 export default {

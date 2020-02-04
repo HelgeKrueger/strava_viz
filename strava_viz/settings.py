@@ -26,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '07gezf$7(4hx1nnj(ffdyl8#bz5ws1cbghrae(*9@__9lj#k=^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ['ENVIRONMENT'] == 'dev'
 
 ALLOWED_HOSTS = ['localhost', 'strava-viz.herokuapp.com']
 
