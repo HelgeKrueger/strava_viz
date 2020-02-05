@@ -114,16 +114,22 @@ def date_to_utc_midnight(my_date):
 def current_and_last_month(request):
     print(timezone.utc)
     activities = StravaActivity.objects.filter(user=request.user)
-    activities = map(strava_activity_to_dict, activities)
+    activities = list(map(strava_activity_to_dict, activities))
 
     first_month = date_to_utc_midnight(date.today().replace(day=1))
     first_last_month = date_to_utc_midnight((first_month - timedelta(days=5)).replace(day=1))
 
+    current_month = [
+        a for a in activities
+        if a['datetime'] >= first_month]
+    activities_last_month = [
+        a for a in activities
+        if a['datetime'] >= first_last_month and a['datetime'] < first_month]
+
+    transformed_last_month = transform_month_to_calendar(activities_last_month)
+    transformed_current_month = transform_month_to_calendar(current_month)
+
     return JsonResponse({
-        'current_month': transform_month_to_calendar([
-            a for a in activities
-            if a['datetime'] >= first_month]),
-        'last_month': transform_month_to_calendar([
-            a for a in activities
-            if a['datetime'] >= first_last_month and a['datetime'] < first_month])
+        'current_month': transformed_current_month,
+        'last_month': transformed_last_month
     })

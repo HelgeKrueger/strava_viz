@@ -16,7 +16,7 @@ def transform_month(data):
 
         activities = [d for d in data if d['datetime'].date() == current_day]
         runs = [a for a in activities if a['activity_type'] == 'run']
-        rides = [a for a in activities if a['activity_type'] == 'rides']
+        rides = [a for a in activities if a['activity_type'] == 'ride']
 
         item = {
             'weekday': isoday-1,
