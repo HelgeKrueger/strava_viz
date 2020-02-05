@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, time, timedelta, timezone
 from collections import defaultdict
 import numpy as np
 
@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from strava_viz.app.models import StravaActivity
+from strava_viz.lib import transform_month as transform_month_to_calendar
 
 
 def strava_activity_to_dict(strava_activity):
@@ -102,4 +103,27 @@ def polylines(request):
 
     return JsonResponse({
         'thisYear': this_year
+    })
+
+
+def date_to_utc_midnight(my_date):
+    return datetime.combine(my_date, time(), tzinfo=timezone.utc)
+
+
+@login_required
+def current_and_last_month(request):
+    print(timezone.utc)
+    activities = StravaActivity.objects.filter(user=request.user)
+    activities = map(strava_activity_to_dict, activities)
+
+    first_month = date_to_utc_midnight(date.today().replace(day=1))
+    first_last_month = date_to_utc_midnight((first_month - timedelta(days=5)).replace(day=1))
+
+    return JsonResponse({
+        'current_month': transform_month_to_calendar([
+            a for a in activities
+            if a['datetime'] >= first_month]),
+        'last_month': transform_month_to_calendar([
+            a for a in activities
+            if a['datetime'] >= first_last_month and a['datetime'] < first_month])
     })
