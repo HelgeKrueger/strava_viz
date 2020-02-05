@@ -34,13 +34,38 @@ export default {
   mounted: () => {
     const svg = d3.select("svg");
     const cellSize = 15;
-    const cellSpacing = cellSize + 1;
+    const cellSpacing = 20;
 
     d3.json("/api/current_and_last_month").then(data => {
       const lastMonth = data.last_month;
       const currentMonth = data.current_month;
+      const dayNames = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+      const monthNames = ["Januar", "Februar"];
       svg
         .append("g")
+        .attr("transform", "translate(0, 20)")
+        .attr("text-anchor", "end")
+        .selectAll("text")
+        .data(d3.range(7))
+        .join("text")
+        .attr("x", 30)
+        .attr("y", d => (d + 0.7) * cellSpacing)
+        .text(d => dayNames[d]);
+
+      svg
+        .append("g")
+        .attr("transform", "translate(120, 0)")
+        .attr("text-anchor", "end")
+        .selectAll("text")
+        .data(d3.range(2))
+        .join("text")
+        .attr("x", d => 120 * d)
+        .attr("y", 15)
+        .text(d => monthNames[d]);
+
+      svg
+        .append("g")
+        .attr("transform", "translate(40, 20)")
         .selectAll("rect")
         .data(lastMonth)
         .join("rect")
@@ -52,7 +77,7 @@ export default {
 
       svg
         .append("g")
-        .attr("transform", "translate(300, 0)")
+        .attr("transform", "translate(160, 20)")
         .selectAll("rect")
         .data(currentMonth)
         .join("rect")

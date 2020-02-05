@@ -128,6 +128,7 @@ def current_and_last_month(request):
 
     transformed_last_month = transform_month_to_calendar(activities_last_month)
     transformed_current_month = transform_month_to_calendar(current_month)
+    transformed_current_month = transformed_current_month[:(datetime.now().day)]
 
     return JsonResponse({
         'current_month': transformed_current_month,

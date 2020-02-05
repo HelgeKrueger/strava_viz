@@ -31,7 +31,7 @@ class MonthlyDataTests(TestCase):
 
     def create_activity(self, my_datetime=None, moving_time=12, distance_meter=1000, activity_type=ActivityType.RUN):
         if my_datetime is None:
-            my_datetime = datetime.now()
+            my_datetime = datetime.utcnow()
 
         activity = StravaActivity.objects.create(
             user=self.test_user,
@@ -45,7 +45,7 @@ class MonthlyDataTests(TestCase):
         activity.save()
 
     def test_current_and_last_month_with_data(self):
-        first_day_of_month = datetime.now().replace(day=1)
+        first_day_of_month = datetime.utcnow().replace(day=1)
         self.create_activity(my_datetime=first_day_of_month, moving_time=3600, activity_type=ActivityType.RUN)
 
         response = self.client.get(reverse('current_and_last_month'))
@@ -56,3 +56,5 @@ class MonthlyDataTests(TestCase):
 
         assert 'current_month' in data
         assert 'last_month' in data
+
+        assert len(data['current_month']) == datetime.now().day
