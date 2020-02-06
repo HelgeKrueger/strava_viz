@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   context: __dirname,
@@ -58,6 +59,7 @@ module.exports = {
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: "styles-[hash].css"
-    })
+    }),
+    new CleanWebpackPlugin()
   ]
 };
