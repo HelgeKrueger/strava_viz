@@ -25,6 +25,7 @@ def transform_month(data):
             'run_distance': sum(a['distance_km'] for a in runs),
             'ride_time': sum(a['moving_time'] for a in rides),
             'ride_distance': sum(a['distance_km'] for a in rides),
+            'ids': [a['activity_id'] for a in activities]
         }
 
         result.append(item)

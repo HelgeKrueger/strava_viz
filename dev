@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
 code .
-tmux new-session 'npx webpack --mode development --watch' \; new-window 'pipenv run django-server' \; new-window 'pipenv shell'
+tmux new-session 'npx webpack --mode development --watch' \; new-window 'pipenv run django-server' 
+#\; new-window 'pipenv shell'

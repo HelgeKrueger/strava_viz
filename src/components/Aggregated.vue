@@ -89,7 +89,7 @@ export default {
 };
 </script>
 <style>
-svg {
+svg.canvas {
   width: 1100px;
   height: 2100px;
 }

@@ -15,13 +15,18 @@
       </select>
     </div>
 
-    <svg class="canvas" />
+    <div class="canvas">
+      <MonthlyLineChart
+        v-bind:display_variable="display_variable"
+        v-bind:raw_data="raw_data"
+        v-bind:filter_activity_type="filter_activity_type"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-const d3 = require("d3");
-import LineChart from "../graph/LineChart.js";
+import MonthlyLineChart from "./MonthlyLineChart.vue";
 
 export default {
   name: "Monthly",
@@ -35,73 +40,9 @@ export default {
   mounted() {
     d3.json("/api/monthly_data").then(data => {
       this.raw_data = data;
-      this.updateGraph();
     });
   },
-  watch: {
-    display_variable: function() {
-      this.updateGraph();
-    },
-    filter_activity_type: function() {
-      this.updateGraph();
-    }
-  },
-  methods: {
-    get_total_display_variable: function() {
-      const prefix_map = {
-        both: "total",
-        ride: "ride",
-        run: "run"
-      };
-      return (
-        prefix_map[this.filter_activity_type] + "_" + this.display_variable
-      );
-    },
-    get_max_value: function(data_index) {
-      const lastValue = d => d[d.length - 1];
-      let maximas = this.raw_data.lastYear.map(
-        month => lastValue(month)[data_index]
-      );
-      maximas.push(lastValue(this.raw_data.currentMonth)[data_index]);
-
-      return Math.max.apply(null, maximas);
-    },
-    updateGraph: function() {
-      const data_index = this.get_total_display_variable();
-      const maxY = this.get_max_value(data_index);
-
-      let lineChart = new LineChart({
-        width: parseInt(canvas.style("width"), 10),
-        height: parseInt(canvas.style("height"), 10),
-        marginX: 50,
-        marginY: 50,
-        selector: d3.select(this.$el).select("svg")
-      })
-        .clean()
-        .withXRange(0, 31)
-        .withYRange(0, maxY)
-        .drawAxes();
-
-      let options = {
-        opacity: 1,
-        xValue: d => d["day"],
-        yValue: d => d[data_index]
-      };
-
-      lineChart.plotLine(this.raw_data.currentMonth, options);
-
-      options["opacity"] = 0.4;
-      lineChart.plotLine(this.raw_data.lastYear[0], options);
-
-      options["opacity"] = 0.1;
-      this.raw_data.lastYear.slice(1).forEach(
-        d => {
-          lineChart.plotLine(d, options);
-        },
-        { lineChart }
-      );
-    }
-  }
+  components: { MonthlyLineChart }
 };
 </script>
 

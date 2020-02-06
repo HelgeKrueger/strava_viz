@@ -11,10 +11,14 @@ from strava_viz.lib import transform_month, aggregate_month
 def strava_activity_to_dict(strava_activity):
     return {
         'activity_id': strava_activity.activity_id,
+        'name': strava_activity.name,
         'datetime': strava_activity.datetime,
         'moving_time': strava_activity.moving_time / 3600,
         'distance_km': strava_activity.distance_meter / 1000,
-        'activity_type': strava_activity.activity_type.value
+        'activity_type': strava_activity.activity_type.value,
+        'polyline': strava_activity.polyline,
+        'average_heartrate': strava_activity.average_heartrate,
+        'average_speed': strava_activity.average_speed
     }
 
 
@@ -38,6 +42,16 @@ def build_month_list():
         result.append(f"{year}-{month}")
 
     return result
+
+
+@login_required
+def activity(request, id):
+    try:
+        activity = StravaActivity.objects.filter(user=request.user).get(activity_id=id)
+        return JsonResponse(strava_activity_to_dict(activity))
+
+    except StravaActivity.DoesNotExist:
+        return JsonResponse({})
 
 
 @login_required

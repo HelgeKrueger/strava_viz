@@ -17,7 +17,7 @@ export default class LineChart {
   }
 
   clean() {
-    this.selector.select("*").remove();
+    this.selector.selectAll("*").remove();
     return this;
   }
 
@@ -28,7 +28,8 @@ export default class LineChart {
     this.xScale = d3
       .scaleLinear()
       .domain([this.xmin, this.xmax])
-      .range([this.marginX, this.width - this.marginX]);
+      // .range([this.marginX, this.width - this.marginX]);
+      .range([this.marginX, this.width]);
 
     return this;
   }
@@ -40,7 +41,7 @@ export default class LineChart {
     this.yScale = d3
       .scaleLinear()
       .domain([this.ymin, this.ymax])
-      .range([this.height - this.marginY, this.marginY]);
+      .range([this.height - this.marginY, 0]);
 
     return this;
   }

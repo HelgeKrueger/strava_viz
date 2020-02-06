@@ -10,5 +10,6 @@ urlpatterns = [
     path('api/monthly_data', views.monthly_data, name='stats_monthly_data'),
     path('api/activities', views.activities, name='api_activties'),
     path('api/polylines', views.polylines, name='api_polylines'),
-    path('api/current_and_last_month', views.current_and_last_month, name='current_and_last_month')
+    path('api/current_and_last_month', views.current_and_last_month, name='current_and_last_month'),
+    path('api/activity/<int:id>', views.activity, name='api_activity')
 ]

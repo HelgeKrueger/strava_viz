@@ -12,7 +12,8 @@ def test_transform_month():
             'datetime': datetime(2020, 1, 5),
             'activity_type': 'run',
             'moving_time': 0.5,
-            'distance_km': 5
+            'distance_km': 5,
+            'activity_id': 12
         }
     ]
 
