@@ -12,7 +12,15 @@ class MonthlyDataTests(ActivityTestCase):
 
         data = response.json()
 
-        self.assertEqual(data['currentMonth'][-1], [date.today().day, 0, 0])
+        self.assertEqual(data['currentMonth'][-1], {
+            'day': date.today().day,
+            'total_distance': 0,
+            'total_time': 0,
+            'ride_distance': 0,
+            'ride_time': 0,
+            'run_distance': 0,
+            'run_time': 0
+        })
 
     def test_gets_response(self):
         self.create_activity(moving_time=12*3600)
@@ -23,7 +31,7 @@ class MonthlyDataTests(ActivityTestCase):
 
         data = response.json()
 
-        self.assertEqual(data['currentMonth'][-1][2], 12)
+        self.assertEqual(data['currentMonth'][-1]['total_time'], 12)
 
     def test_gets_last_month(self):
         now = datetime.now()
@@ -40,5 +48,21 @@ class MonthlyDataTests(ActivityTestCase):
 
         last_month = data['lastYear'][0]
         self.assertEqual(len(last_month), 32)
-        self.assertEquals(last_month[1], [1, 2, 1])
-        self.assertEquals(last_month[-1], [31, 2, 1])
+        self.assertEquals(last_month[1], {
+            'day': 1,
+            'total_distance': 2,
+            'total_time': 1,
+            'ride_distance': 0,
+            'ride_time': 0,
+            'run_distance': 2,
+            'run_time': 1
+        })
+        self.assertEquals(last_month[-1], {
+            'day': 31,
+            'total_distance': 2,
+            'total_time': 1,
+            'ride_distance': 0,
+            'ride_time': 0,
+            'run_distance': 2,
+            'run_time': 1
+        })

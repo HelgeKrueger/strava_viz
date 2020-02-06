@@ -30,3 +30,48 @@ def transform_month(data):
         result.append(item)
 
     return result
+
+
+def aggregate_month(activities, end_day=31):
+    total_distance = 0
+    total_time = 0
+    ride_distance = 0
+    ride_time = 0
+    run_distance = 0
+    run_time = 0
+
+    result = [{
+        'day': 0,
+        'total_distance': total_distance,
+        'total_time': total_time,
+        'ride_distance': ride_distance,
+        'ride_time': ride_time,
+        'run_distance': run_distance,
+        'run_time': run_time
+    }]
+
+    for j in range(1, end_day+1):
+        for a in activities:
+            if a['datetime'].day == j:
+                total_distance += a['distance_km']
+                total_time += a['moving_time']
+
+                if a['activity_type'] == 'run':
+                    run_distance += a['distance_km']
+                    run_time += a['moving_time']
+
+                if a['activity_type'] == 'ride':
+                    ride_distance += a['distance_km']
+                    ride_time += a['moving_time']
+
+        result.append({
+            'day': j,
+            'total_distance': total_distance,
+            'total_time': total_time,
+            'ride_distance': ride_distance,
+            'ride_time': ride_time,
+            'run_distance': run_distance,
+            'run_time': run_time
+        })
+
+    return result

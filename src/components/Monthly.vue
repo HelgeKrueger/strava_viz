@@ -11,7 +11,7 @@
 
       <select v-model="display_variable" value="Both">
         <option value="distance">Distance (km)</option>
-        <option value="teim">Moving time (hours)</option>
+        <option value="time">Moving time (hours)</option>
       </select>
     </div>
 
@@ -40,9 +40,31 @@ export default {
   watch: {
     display_variable: function() {
       this.updateGraph();
+    },
+    filter_activity_type: function() {
+      this.updateGraph();
     }
   },
   methods: {
+    get_total_display_variable: function() {
+      const prefix_map = {
+        both: "total",
+        ride: "ride",
+        run: "run"
+      };
+      return (
+        prefix_map[this.filter_activity_type] + "_" + this.display_variable
+      );
+    },
+    get_max_value: function(data_index) {
+      const lastValue = d => d[d.length - 1];
+      let maximas = this.raw_data.lastYear.map(
+        month => lastValue(month)[data_index]
+      );
+      maximas.push(lastValue(this.raw_data.currentMonth)[data_index]);
+
+      return Math.max.apply(null, maximas);
+    },
     updateGraph: function() {
       const canvas = d3.select(this.$el).select("svg");
       canvas.selectAll("*").remove();
@@ -52,13 +74,8 @@ export default {
       const marginX = 50;
       const marginY = 50;
 
-      const data_index = this.display_variable === "distance" ? 1 : 2;
-      const max_name =
-        this.display_variable === "distance"
-          ? "maximal_distance"
-          : "maximal_time";
-
-      const maxY = this.raw_data[max_name];
+      const data_index = this.get_total_display_variable();
+      const maxY = this.get_max_value(data_index);
 
       const xScale = d3
         .scaleLinear()
@@ -82,7 +99,7 @@ export default {
 
       const line = d3
         .line()
-        .x(d => xScale(d[0]))
+        .x(d => xScale(d["day"]))
         .y(d => yScale(d[data_index]));
 
       const plotLine = (data, opacity) => {

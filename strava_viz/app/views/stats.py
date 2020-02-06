@@ -1,12 +1,11 @@
 from datetime import date, datetime, time, timedelta, timezone
 from collections import defaultdict
-import numpy as np
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from strava_viz.app.models import StravaActivity
-from strava_viz.lib import transform_month as transform_month_to_calendar
+from strava_viz.lib import transform_month, aggregate_month
 
 
 def strava_activity_to_dict(strava_activity):
@@ -41,22 +40,6 @@ def build_month_list():
     return result
 
 
-def transform_month(activities, end_day=31):
-    total_distance = 0
-    total_time = 0
-    result = [[0, 0, 0]]
-
-    for j in range(1, end_day+1):
-        for a in activities:
-            if a['datetime'].day == j:
-                total_distance += a['distance_km']
-                total_time += a['moving_time']
-
-        result.append([j, total_distance, total_time])
-
-    return result
-
-
 @login_required
 def monthly_data(request):
     activities = StravaActivity.objects.filter(user=request.user)
@@ -71,16 +54,12 @@ def monthly_data(request):
     month_list = build_month_list()
     current_month = activities_by_month[month_list[0]]
 
-    transformed = [transform_month(current_month, end_day=date.today().day)] + [transform_month(activities_by_month[m]) for m in month_list[1:]]
-
-    maximal_distance = float(np.max([m[-1][1] for m in transformed]))
-    maximal_time = float(np.max([m[-1][2] for m in transformed]))
+    transformed = [aggregate_month(current_month, end_day=date.today().day)]
+    transformed += [aggregate_month(activities_by_month[m]) for m in month_list[1:]]
 
     return JsonResponse({
         'currentMonth': transformed[0],
-        'lastYear': transformed[1:],
-        'maximal_distance': maximal_distance,
-        'maximal_time': maximal_time
+        'lastYear': transformed[1:]
     })
 
 
@@ -126,8 +105,8 @@ def current_and_last_month(request):
         a for a in activities
         if a['datetime'] >= first_last_month and a['datetime'] < first_month]
 
-    transformed_last_month = transform_month_to_calendar(activities_last_month)
-    transformed_current_month = transform_month_to_calendar(current_month)
+    transformed_last_month = transform_month(activities_last_month)
+    transformed_current_month = transform_month(current_month)
     transformed_current_month = transformed_current_month[:(datetime.now().day)]
 
     return JsonResponse({
