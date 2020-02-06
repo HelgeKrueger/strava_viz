@@ -21,6 +21,7 @@
 
 <script>
 const d3 = require("d3");
+import LineChart from "../graph/LineChart.js";
 
 export default {
   name: "Monthly",
@@ -66,62 +67,39 @@ export default {
       return Math.max.apply(null, maximas);
     },
     updateGraph: function() {
-      const canvas = d3.select(this.$el).select("svg");
-      canvas.selectAll("*").remove();
-
-      const width = parseInt(canvas.style("width"), 10);
-      const height = parseInt(canvas.style("height"), 10);
-      const marginX = 50;
-      const marginY = 50;
-
       const data_index = this.get_total_display_variable();
       const maxY = this.get_max_value(data_index);
 
-      const xScale = d3
-        .scaleLinear()
-        .domain([0, 31])
-        .range([marginX, width - marginX]);
-      const xAxis = d3.axisBottom(xScale);
-      canvas
-        .append("g")
-        .attr("transform", `translate(0, ${height - marginY})`)
-        .call(xAxis);
+      let lineChart = new LineChart({
+        width: parseInt(canvas.style("width"), 10),
+        height: parseInt(canvas.style("height"), 10),
+        marginX: 50,
+        marginY: 50,
+        selector: d3.select(this.$el).select("svg")
+      })
+        .clean()
+        .withXRange(0, 31)
+        .withYRange(0, maxY)
+        .drawAxes();
 
-      const yScale = d3
-        .scaleLinear()
-        .domain([0, maxY])
-        .range([height - marginY, marginY]);
-      const yAxis = d3.axisLeft(yScale);
-      canvas
-        .append("g")
-        .attr("transform", `translate(${marginX}, 0)`)
-        .call(yAxis);
-
-      const line = d3
-        .line()
-        .x(d => xScale(d["day"]))
-        .y(d => yScale(d[data_index]));
-
-      const plotLine = (data, opacity) => {
-        canvas
-          .append("g")
-          .append("path")
-          .datum(data)
-          .attr("fill", "none")
-          .attr("stroke", "steelblue")
-          .attr("stroke-width", 2)
-          .attr("stroke-linejoin", "round")
-          .attr("stroke-linecap", "round")
-          .attr("stroke-opacity", opacity)
-          .attr("d", line);
+      let options = {
+        opacity: 1,
+        xValue: d => d["day"],
+        yValue: d => d[data_index]
       };
 
-      plotLine(this.raw_data.currentMonth, 1);
-      plotLine(this.raw_data.lastYear[0], 0.4);
+      lineChart.plotLine(this.raw_data.currentMonth, options);
 
-      this.raw_data.lastYear.slice(1).forEach(d => {
-        plotLine(d, 0.1);
-      });
+      options["opacity"] = 0.4;
+      lineChart.plotLine(this.raw_data.lastYear[0], options);
+
+      options["opacity"] = 0.1;
+      this.raw_data.lastYear.slice(1).forEach(
+        d => {
+          lineChart.plotLine(d, options);
+        },
+        { lineChart }
+      );
     }
   }
 };
