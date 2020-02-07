@@ -48,7 +48,7 @@ class MonthlyDataTests(ActivityTestCase):
 
         last_month = data['lastYear'][0]
         self.assertEqual(len(last_month), 32)
-        self.assertEquals(last_month[1], {
+        self.assertEqual(last_month[1], {
             'day': 1,
             'total_distance': 2,
             'total_time': 1,
@@ -57,7 +57,7 @@ class MonthlyDataTests(ActivityTestCase):
             'run_distance': 2,
             'run_time': 1
         })
-        self.assertEquals(last_month[-1], {
+        self.assertEqual(last_month[-1], {
             'day': 31,
             'total_distance': 2,
             'total_time': 1,

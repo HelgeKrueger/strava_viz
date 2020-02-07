@@ -1,5 +1,7 @@
 <template>
-  <svg class="canvas" />
+  <div class="calendar">
+    <svg class="canvas" />
+  </div>
 </template>
 
 <script>
@@ -23,4 +25,9 @@ export default {
 </script>
 
 <style>
+div.calendar {
+  height: calc(100vh - 100px);
+  width: 100%;
+  overflow: scroll;
+}
 </style>

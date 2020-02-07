@@ -6,8 +6,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from strava_viz.app.models import StravaConnectionInformation, StravaActivity, ActivityType
+from strava_viz.app.models import StravaConnectionInformation, StravaActivity
 from strava_viz.lib import Strava
+from strava_viz.app.process import get_strava_activities_async
 
 
 def connect_to_strava(request):
@@ -47,65 +48,15 @@ def strava_reply(request):
 
 @login_required
 def update_data(request):
-    current_user = request.user
-    sci = current_user.stravaconnectioninformation
-
-    strava = Strava()
-    strava.set_tokens(sci.access_token, sci.refresh_token)
-
-    try:
-        result = strava.get_activities()
-    except Exception:
-        strava.request_new_access_token()
-        current_user.stravaconnectioninformation.refresh_token = strava.refresh_token
-        current_user.stravaconnectioninformation.save()
-
-        result = strava.get_activities()
-
-    insert_count = 0
-    current_page = 0
-
-    while len(result) > 0:
-        for activity in result:
-            if insert_strava_activity(current_user, activity):
-                insert_count += 1
-            else:
-                return JsonResponse({
-                    'insert_count': insert_count
-                })
-
-        current_page += 1
-        result = strava.get_activities(page=current_page)
+    get_strava_activities_async(request.user.id)
 
     return JsonResponse({
-        'insert_count': insert_count
+        'scheduled': True
     })
 
 
-def insert_strava_activity(user, activity):
-    activity_id = activity['id']
+@login_required
+def delete_all(request):
+    StravaActivity.objects.filter(user=request.user).delete()
 
-    if StravaActivity.objects.filter(activity_id=activity_id):
-        return False
-
-    activity_type = ActivityType(activity['type'].lower())
-
-    polyline = activity['map']['summary_polyline']
-    if not polyline:
-        polyline = ""
-
-    activity = StravaActivity.objects.create(
-        user=user,
-        name=activity['name'],
-        datetime=activity['start_date'],
-        activity_type=activity_type,
-        activity_id=activity_id,
-        distance_meter=activity['distance'],
-        moving_time=activity['moving_time'],
-        average_heartrate=activity.get('average_heartrate', 0),
-        average_speed=activity.get('average_speed', 0),
-        polyline=polyline
-    )
-    activity.save()
-
-    return True
+    return JsonResponse({})
