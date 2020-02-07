@@ -65,7 +65,7 @@ export class OpenLayerMap {
       features: features
     });
 
-    this.view.fit(source.getExtent());
+    this.view.fit(source.getExtent(), { padding: [25, 25, 50, 25] });
 
     var layerLines = new VectorLayer({
       source: source

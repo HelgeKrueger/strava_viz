@@ -18,7 +18,7 @@ def strava_activity_to_dict(strava_activity):
         'activity_type': strava_activity.activity_type.value,
         'polyline': strava_activity.polyline,
         'average_heartrate': strava_activity.average_heartrate,
-        'average_speed': strava_activity.average_speed
+        'average_speed_kmh': strava_activity.average_speed * 3.6
     }
 
 

@@ -2,15 +2,20 @@
   <div style="position:relative; width: 600px;">
     <div class="activity-overview-map"></div>
     <div class="activity-overview-info" v-if="info">
-      Name: {{ info['name']}}
-      <br />
-      Distance: {{ info['distance_km'] }} km
-      <br />
-      Moving Time: {{ formatTime(info['moving_time']) }}
-      <br />
-      Average Speed: {{ info['average_speed']}} km/h
-      <br />
-      Average Heartrate: {{ info['average_heartrate']}}
+      <dl>
+        <dt>Name:</dt>
+        <dd>
+          <a v-bind:href="stravaLink()">{{ info['name']}}</a>
+        </dd>
+        <dt>Distance:</dt>
+        <dd>{{ info['distance_km'].toFixed(1) }} km</dd>
+        <dt>Moving Time:</dt>
+        <dd>{{ formatTime(info['moving_time']) }}</dd>
+        <dt>Average Speed:</dt>
+        <dd>{{ info['average_speed_kmh'].toFixed(1)}} km/h</dd>
+        <dt>Average Heartrate:</dt>
+        <dd>{{ info['average_heartrate']}}</dd>
+      </dl>
     </div>
   </div>
 </template>
@@ -46,6 +51,9 @@ export default {
         MM = `0${MM}`;
       }
       return `${HH}:${MM}`;
+    },
+    stravaLink: function() {
+      return `https://www.strava.com/activities/${this.activityId}`;
     }
   }
 };
@@ -61,7 +69,18 @@ export default {
   position: absolute;
   top: 0;
   left: 350px;
-  width: 300px;
+  width: 350px;
   height: 300px;
+}
+
+dt {
+  width: 175px;
+  font-weight: bold;
+  float: left;
+}
+
+dd {
+  float: left;
+  margin-left: 10px;
 }
 </style>
