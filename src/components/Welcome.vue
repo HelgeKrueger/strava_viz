@@ -1,28 +1,34 @@
 <template>
   <div>
-    <h1>Welcome</h1>
-    <div class="calendar-welcome">
-      <CalendarWelcome v-bind:data="calendarData" @updateIds="updateIds" />
-    </div>
-    <div class="activities">
-      <ActivityOverview v-for="id in activityIds" v-bind:key="id" v-bind:activityId="id" />
-    </div>
-    <div class="monthly-activity">
+    <div class="welcome-container">
+      <div class="calendar-welcome">
+        <h1>Welcome</h1>
+
+        <CalendarWelcome v-bind:data="calendarData" @updateIds="updateIds" />
+      </div>
+
       <div class="monthly-run">
         <h2>Rides</h2>
-        <MonthlyLineChart
-          display_variable="distance"
-          v-bind:raw_data="monthlyData"
-          filter_activity_type="ride"
-        />
+        <div class="chart-container">
+          <MonthlyLineChart
+            display_variable="distance"
+            v-bind:raw_data="monthlyData"
+            filter_activity_type="ride"
+          />
+        </div>
       </div>
       <div class="monthly-run">
         <h2>Runs</h2>
-        <MonthlyLineChart
-          display_variable="distance"
-          v-bind:raw_data="monthlyData"
-          filter_activity_type="run"
-        />
+        <div class="chart-container">
+          <MonthlyLineChart
+            display_variable="distance"
+            v-bind:raw_data="monthlyData"
+            filter_activity_type="run"
+          />
+        </div>
+      </div>
+      <div class="activities">
+        <ActivityOverview v-for="id in activityIds" v-bind:key="id" v-bind:activityId="id" />
       </div>
     </div>
   </div>
@@ -65,6 +71,10 @@ export default {
 </script>
 
 <style>
+.welcome-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 .calendar-welcome {
   width: 500px;
   height: 175px;
@@ -80,6 +90,11 @@ export default {
 .monthly-run {
   width: 400px;
   height: 300px;
+}
+
+.chart-container {
+  height: calc(100% - 70px);
+  width: 90%;
 }
 
 .monthly-ride {
