@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="welcome-container">
-      <div class="calendar-welcome">
+      <div class="calendar-welcome activity-box">
         <h1>Welcome</h1>
 
         <CalendarWelcome v-bind:data="calendarData" @updateIds="updateIds" />
       </div>
 
-      <div class="monthly-run">
+      <div class="activity-box">
         <h2>Rides</h2>
         <div class="chart-container">
           <MonthlyLineChart
@@ -17,7 +17,7 @@
           />
         </div>
       </div>
-      <div class="monthly-run">
+      <div class="activity-box">
         <h2>Runs</h2>
         <div class="chart-container">
           <MonthlyLineChart
@@ -27,8 +27,14 @@
           />
         </div>
       </div>
-      <div class="activities">
-        <ActivityOverview v-for="id in activityIds" v-bind:key="id" v-bind:activityId="id" />
+      <div class="activity-box">
+        <h2>Heartrate</h2>
+        <div class="chart-container">
+          <AverageChart display_variable="heartrate" v-bind:raw_data="activities" />
+        </div>
+      </div>
+      <div class="activity-box activities" v-for="id in activityIds" v-bind:key="id">
+        <ActivityOverview v-bind:activityId="id" />
       </div>
     </div>
   </div>
@@ -39,6 +45,7 @@ import { transformData } from "../data/transform";
 const d3 = require("d3");
 
 import ActivityOverview from "./ActivityOverview.vue";
+import AverageChart from "./AverageChart.vue";
 import MonthlyLineChart from "./MonthlyLineChart.vue";
 import CalendarWelcome from "./CalendarWelcome.vue";
 
@@ -48,12 +55,17 @@ export default {
     return {
       monthlyData: {},
       activityIds: {},
-      calendarData: {}
+      calendarData: {},
+      activities: {}
     };
   },
   mounted: function() {
     d3.json("/api/monthly_data").then(data => {
       this.monthlyData = data;
+    });
+
+    d3.json("/api/activities").then(data => {
+      this.activities = data;
     });
 
     d3.json("/api/current_and_last_month").then(data => {
@@ -66,14 +78,28 @@ export default {
       this.activityIds = ids;
     }
   },
-  components: { ActivityOverview, MonthlyLineChart, CalendarWelcome }
+  components: {
+    ActivityOverview,
+    AverageChart,
+    MonthlyLineChart,
+    CalendarWelcome
+  }
 };
 </script>
 
 <style>
+h1 {
+  text-align: center;
+}
+h2 {
+  text-align: center;
+}
 .welcome-container {
   display: flex;
   flex-wrap: wrap;
+  background-color: lightgray;
+  height: calc(100vh - 100px);
+  overflow: scroll;
 }
 .calendar-welcome {
   width: 500px;
@@ -87,9 +113,12 @@ export default {
     right: 10px;
   }
 }
-.monthly-run {
+.activity-box {
   width: 400px;
   height: 300px;
+  background-color: white;
+  box-shadow: 0 4px 1px 0 darkgray;
+  margin: 5px;
 }
 
 .chart-container {
@@ -97,8 +126,7 @@ export default {
   width: 90%;
 }
 
-.monthly-ride {
-  width: 400px;
-  height: 300px;
+.activities {
+  width: 800px;
 }
 </style>

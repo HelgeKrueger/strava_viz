@@ -65,15 +65,19 @@ export default class LineChart {
   plotLine(data, properties) {
     const line = d3
       .line()
-      .x(d => this.xScale(properties["xValue"](d)))
-      .y(d => this.yScale(properties["yValue"](d)));
+      .x((d, i) => this.xScale(properties["xValue"](d, i)))
+      .y((d, i) => this.yScale(properties["yValue"](d, i)));
+
+    if (!properties["color"]) {
+      properties["color"] = "steelblue";
+    }
 
     this.selector
       .append("g")
       .append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+      .attr("stroke", properties["color"])
       .attr("stroke-width", 2)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
