@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -18,7 +18,7 @@ class ActivityTestCase(TestCase):
 
     def create_activity(self, my_datetime=None, moving_time=12, distance_meter=1000, activity_type=ActivityType.RUN):
         if my_datetime is None:
-            my_datetime = datetime.utcnow()
+            my_datetime = datetime.now(tz=timezone.utc)
 
         activity = StravaActivity.objects.create(
             user=self.test_user,

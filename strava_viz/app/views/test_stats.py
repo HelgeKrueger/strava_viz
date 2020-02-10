@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from django.urls import reverse
 
 from strava_viz.app.models import ActivityType
@@ -17,7 +17,7 @@ class MonthlyDataTests(ActivityTestCase):
         assert 'last_month' in data
 
     def test_current_and_last_month_with_data(self):
-        first_day_of_month = datetime.utcnow().replace(day=1)
+        first_day_of_month = datetime.now(tz=timezone.utc).replace(day=1)
         self.create_activity(my_datetime=first_day_of_month, moving_time=3600, activity_type=ActivityType.RUN)
 
         response = self.client.get(reverse('current_and_last_month'))

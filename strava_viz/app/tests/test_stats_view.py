@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from django.urls import reverse
 
 from strava_viz.app.tests import ActivityTestCase
@@ -34,7 +34,7 @@ class MonthlyDataTests(ActivityTestCase):
         self.assertEqual(data['currentMonth'][-1]['total_time'], 12)
 
     def test_gets_last_month(self):
-        now = datetime.now()
+        now = datetime.now(tz=timezone.utc)
         start_of_month = now.replace(day=1)
         start_of_last_month = (start_of_month - timedelta(days=20)).replace(day=1)
 

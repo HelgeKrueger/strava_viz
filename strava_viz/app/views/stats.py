@@ -79,7 +79,7 @@ def monthly_data(request):
 
 @login_required
 def activities(request):
-    activities = StravaActivity.objects.filter(user=request.user)
+    activities = StravaActivity.objects.filter(user=request.user).order_by('-datetime')
     activities = map(strava_activity_to_dict, activities)
 
     return JsonResponse(list(activities), safe=False)
