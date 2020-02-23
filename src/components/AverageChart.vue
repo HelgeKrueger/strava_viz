@@ -50,7 +50,7 @@ export default {
       })
         .clean()
         .withXRange(0, item_count)
-        .withYRange(0, 205)
+        .withYRange(100, 205)
         .drawAxes();
 
       let options = {

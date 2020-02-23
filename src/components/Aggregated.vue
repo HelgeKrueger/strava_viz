@@ -1,10 +1,12 @@
 <template>
   <div>
-    <select v-model="filter_activity_type" value="Both">
-      <option selected="selected" value="both">Both</option>
-      <option value="ride">Rides</option>
-      <option value="run">Runs</option>
-    </select>
+    <div class="plotOptions">
+      <select v-model="filter_activity_type" value="Both">
+        <option selected="selected" value="both">Both</option>
+        <option value="ride">Rides</option>
+        <option value="run">Runs</option>
+      </select>
+    </div>
     <svg class="canvas" />
   </div>
 </template>
@@ -88,9 +90,13 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 svg.canvas {
   width: 1100px;
   height: 2100px;
+}
+
+div.plotOptions {
+  margin: 20px;
 }
 </style>
