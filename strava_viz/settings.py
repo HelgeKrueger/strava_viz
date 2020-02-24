@@ -136,44 +136,34 @@ WEBPACK_LOADER = {
     }
 }
 
+django_heroku.settings(locals())
+
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': ('%(asctime)s [%(process)d] [%(levelname)s] '
-                       'pathname=%(pathname)s lineno=%(lineno)s '
-                       'funcname=%(funcName)s %(message)s'),
-            'datefmt': '%Y-%m-%d %H:%M:%S'
+            'format': '{levelname} {asctime} {module} {process:d} {message}',
+            'style': '{',
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
-        }
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
     },
     'handlers': {
-        'null': {
+        'file': {
             'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
             'formatter': 'verbose'
-        }
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
+    },
 }
-
-
-django_heroku.settings(locals())
